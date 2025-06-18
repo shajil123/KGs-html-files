@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#FFA500", "id": "Deccluster6", "label": "Deccluster6", "shape": "dot", "title": "Decease Cluster: Deccluster6"}, {"color": "#9999FF", "id": "molcluster30", "label": "molcluster30", "shape": "dot", "title": "Other: molcluster30"}, {"color": "#FF9999", "id": "Benzaldehyde", "label": "Benzaldehyde", "shape": "dot", "title": "Molecule: Benzaldehyde"}, {"color": "#99FF99", "id": "Aspartate-phenylpyruvate transaminase inhibitor", "label": "Aspartate-phenylpyruvate transaminase inhibitor", "shape": "dot", "title": "Target: Aspartate-phenylpyruvate transaminase inhibitor"}, {"color": "#99FF99", "id": "Monodehydroascorbate reductase (NADH) inhibitor", "label": "Monodehydroascorbate reductase (NADH) inhibitor", "shape": "dot", "title": "Target: Monodehydroascorbate reductase (NADH) inhibitor"}, {"color": "#99FF99", "id": "Aldehyde dehydrogenase 1 substrate", "label": "Aldehyde dehydrogenase 1 substrate", "shape": "dot", "title": "Target: Aldehyde dehydrogenase 1 substrate"}, {"color": "#99FF99", "id": "Aryl-alcohol dehydrogenase inhibitor", "label": "Aryl-alcohol dehydrogenase inhibitor", "shape": "dot", "title": "Target: Aryl-alcohol dehydrogenase inhibitor"}, {"color": "#99FF99", "id": "Aldehyde oxidase inhibitor", "label": "Aldehyde oxidase inhibitor", "shape": "dot", "title": "Target: Aldehyde oxidase inhibitor"}, {"color": "#99FF99", "id": "CDP-glycerol glycerophosphotransferase inhibitor", "label": "CDP-glycerol glycerophosphotransferase inhibitor", "shape": "dot", "title": "Target: CDP-glycerol glycerophosphotransferase inhibitor"}, {"color": "#FF9999", "id": "Benzyl Alcohol", "label": "Benzyl Alcohol", "shape": "dot", "title": "Molecule: Benzyl Alcohol"}, {"color": "#99FF99", "id": "Alkenylglycerophosphocholine hydrolase inhibitor", "label": "Alkenylglycerophosphocholine hydrolase inhibitor", "shape": "dot", "title": "Target: Alkenylglycerophosphocholine hydrolase inhibitor"}, {"color": "#99FF99", "id": "Sugar-phosphatase inhibitor", "label": "Sugar-phosphatase inhibitor", "shape": "dot", "title": "Target: Sugar-phosphatase inhibitor"}, {"color": "#99FF99", "id": "Pullulanase inhibitor", "label": "Pullulanase inhibitor", "shape": "dot", "title": "Target: Pullulanase inhibitor"}, {"color": "#FF9999", "id": "Benzoic acid", "label": "Benzoic acid", "shape": "dot", "title": "Molecule: Benzoic acid"}, {"color": "#99FF99", "id": "Testosterone 17beta-dehydrogenase (NADP+) inhibitor", "label": "Testosterone 17beta-dehydrogenase (NADP+) inhibitor", "shape": "dot", "title": "Target: Testosterone 17beta-dehydrogenase (NADP+) inhibitor"}, {"color": "#99FF99", "id": "Glutamyl endopeptidase II inhibitor", "label": "Glutamyl endopeptidase II inhibitor", "shape": "dot", "title": "Target: Glutamyl endopeptidase II inhibitor"}, {"color": "#99FF99", "id": "Prolyl aminopeptidase inhibitor", "label": "Prolyl aminopeptidase inhibitor", "shape": "dot", "title": "Target: Prolyl aminopeptidase inhibitor"}, {"color": "#99FF99", "id": "Dehydro-L-gulonate decarboxylase inhibitor", "label": "Dehydro-L-gulonate decarboxylase inhibitor", "shape": "dot", "title": "Target: Dehydro-L-gulonate decarboxylase inhibitor"}, {"color": "#99FF99", "id": "Phosphatidylcholine-retinol O-acyltransferase inhibitor", "label": "Phosphatidylcholine-retinol O-acyltransferase inhibitor", "shape": "dot", "title": "Target: Phosphatidylcholine-retinol O-acyltransferase inhibitor"}, {"color": "#99FF99", "id": "Ribulose-phosphate 3-epimerase inhibitor", "label": "Ribulose-phosphate 3-epimerase inhibitor", "shape": "dot", "title": "Target: Ribulose-phosphate 3-epimerase inhibitor"}, {"color": "#99FF99", "id": "Bisphosphoglycerate phosphatase inhibitor", "label": "Bisphosphoglycerate phosphatase inhibitor", "shape": "dot", "title": "Target: Bisphosphoglycerate phosphatase inhibitor"}, {"color": "#99FF99", "id": "Glutathione thiolesterase inhibitor", "label": "Glutathione thiolesterase inhibitor", "shape": "dot", "title": "Target: Glutathione thiolesterase inhibitor"}, {"color": "#99FF99", "id": "Arginine 2-monooxygenase inhibitor", "label": "Arginine 2-monooxygenase inhibitor", "shape": "dot", "title": "Target: Arginine 2-monooxygenase inhibitor"}, {"color": "#99FF99", "id": "UDP-N-acetylglucosamine 4-epimerase inhibitor", "label": "UDP-N-acetylglucosamine 4-epimerase inhibitor", "shape": "dot", "title": "Target: UDP-N-acetylglucosamine 4-epimerase inhibitor"}, {"color": "#99FF99", "id": "2-Hydroxymuconate-semialdehyde hydrolase inhibitor", "label": "2-Hydroxymuconate-semialdehyde hydrolase inhibitor", "shape": "dot", "title": "Target: 2-Hydroxymuconate-semialdehyde hydrolase inhibitor"}, {"color": "#99FF99", "id": "Arylacetonitrilase inhibitor", "label": "Arylacetonitrilase inhibitor", "shape": "dot", "title": "Target: Arylacetonitrilase inhibitor"}, {"color": "#99FF99", "id": "5-O-(4-coumaroyl)-D-quinate 3\u0027-monooxygenase inhibitor", "label": "5-O-(4-coumaroyl)-D-quinate 3\u0027-monooxygenase inhibitor", "shape": "dot", "title": "Target: 5-O-(4-coumaroyl)-D-quinate 3\u0027-monooxygenase inhibitor"}, {"color": "#99FF99", "id": "Chenodeoxycholoyltaurine hydrolase inhibitor", "label": "Chenodeoxycholoyltaurine hydrolase inhibitor", "shape": "dot", "title": "Target: Chenodeoxycholoyltaurine hydrolase inhibitor"}, {"color": "#FF9999", "id": "Anthraquinone", "label": "Anthraquinone", "shape": "dot", "title": "Molecule: Anthraquinone"}, {"color": "#99FF99", "id": "Aspulvinone dimethylallyltransferase inhibitor", "label": "Aspulvinone dimethylallyltransferase inhibitor", "shape": "dot", "title": "Target: Aspulvinone dimethylallyltransferase inhibitor"}, {"color": "#99FF99", "id": "3-Hydroxybenzoate 6-monooxygenase inhibitor", "label": "3-Hydroxybenzoate 6-monooxygenase inhibitor", "shape": "dot", "title": "Target: 3-Hydroxybenzoate 6-monooxygenase inhibitor"}, {"color": "#99FF99", "id": "CYP2C12 substrate", "label": "CYP2C12 substrate", "shape": "dot", "title": "Target: CYP2C12 substrate"}, {"color": "#99FF99", "id": "Alkane 1-monooxygenase inhibitor", "label": "Alkane 1-monooxygenase inhibitor", "shape": "dot", "title": "Target: Alkane 1-monooxygenase inhibitor"}, {"color": "#FF9999", "id": "Lapachol", "label": "Lapachol", "shape": "dot", "title": "Molecule: Lapachol"}, {"color": "#99FF99", "id": "Membrane integrity agonist", "label": "Membrane integrity agonist", "shape": "dot", "title": "Target: Membrane integrity agonist"}, {"color": "#99FF99", "id": "Vitamin-K-epoxide reductase (warfarin-insensitive) inhibitor", "label": "Vitamin-K-epoxide reductase (warfarin-insensitive) inhibitor", "shape": "dot", "title": "Target: Vitamin-K-epoxide reductase (warfarin-insensitive) inhibitor"}, {"color": "#99FF99", "id": "Cardiovascular analeptic", "label": "Cardiovascular analeptic", "shape": "dot", "title": "Target: Cardiovascular analeptic"}, {"color": "#FF9999", "id": "Cinnamyl alcohol", "label": "Cinnamyl alcohol", "shape": "dot", "title": "Molecule: Cinnamyl alcohol"}, {"color": "#99FF99", "id": "Feruloyl esterase inhibitor", "label": "Feruloyl esterase inhibitor", "shape": "dot", "title": "Target: Feruloyl esterase inhibitor"}, {"color": "#FF9999", "id": "3,4-Dihydroxybenzoic acid", "label": "3,4-Dihydroxybenzoic acid", "shape": "dot", "title": "Molecule: 3,4-Dihydroxybenzoic acid"}, {"color": "#99FF99", "id": "Chlordecone reductase inhibitor", "label": "Chlordecone reductase inhibitor", "shape": "dot", "title": "Target: Chlordecone reductase inhibitor"}, {"color": "#FF9999", "id": "2-Phenylethanol", "label": "2-Phenylethanol", "shape": "dot", "title": "Molecule: 2-Phenylethanol"}, {"color": "#FF9999", "id": "Aloe emodin", "label": "Aloe emodin", "shape": "dot", "title": "Molecule: Aloe emodin"}, {"color": "#FF9999", "id": "Phenylacetaldehyde", "label": "Phenylacetaldehyde", "shape": "dot", "title": "Molecule: Phenylacetaldehyde"}, {"color": "#99FF99", "id": "CYP2J substrate", "label": "CYP2J substrate", "shape": "dot", "title": "Target: CYP2J substrate"}, {"color": "#FF9999", "id": "Phthalic acid", "label": "Phthalic acid", "shape": "dot", "title": "Molecule: Phthalic acid"}, {"color": "#FF9999", "id": "Saccharin", "label": "Saccharin", "shape": "dot", "title": "Molecule: Saccharin"}, {"color": "#99FF99", "id": "Cl--transporting ATPase inhibitor", "label": "Cl--transporting ATPase inhibitor", "shape": "dot", "title": "Target: Cl--transporting ATPase inhibitor"}, {"color": "#99FF99", "id": "Creatininase inhibitor", "label": "Creatininase inhibitor", "shape": "dot", "title": "Target: Creatininase inhibitor"}, {"color": "#FF9999", "id": "Phenethylamine", "label": "Phenethylamine", "shape": "dot", "title": "Molecule: Phenethylamine"}, {"color": "#99FF99", "id": "5 Hydroxytryptamine release stimulant", "label": "5 Hydroxytryptamine release stimulant", "shape": "dot", "title": "Target: 5 Hydroxytryptamine release stimulant"}, {"color": "#99FF99", "id": "Phobic disorders treatment", "label": "Phobic disorders treatment", "shape": "dot", "title": "Target: Phobic disorders treatment"}, {"color": "#FF9999", "id": "2\u0027-Methylacetophenone", "label": "2\u0027-Methylacetophenone", "shape": "dot", "title": "Molecule: 2\u0027-Methylacetophenone"}, {"color": "#9999FF", "id": "molcluster46", "label": "molcluster46", "shape": "dot", "title": "Other: molcluster46"}, {"color": "#FF9999", "id": "Methyl 1-methoxy-1H-indole-3-carboxylate", "label": "Methyl 1-methoxy-1H-indole-3-carboxylate", "shape": "dot", "title": "Molecule: Methyl 1-methoxy-1H-indole-3-carboxylate"}, {"color": "#99FF99", "id": "Histone deacetylase 3 inhibitor", "label": "Histone deacetylase 3 inhibitor", "shape": "dot", "title": "Target: Histone deacetylase 3 inhibitor"}, {"color": "#FF9999", "id": "Dimethyl terephthalate", "label": "Dimethyl terephthalate", "shape": "dot", "title": "Molecule: Dimethyl terephthalate"}, {"color": "#99FF99", "id": "CYP2H substrate", "label": "CYP2H substrate", "shape": "dot", "title": "Target: CYP2H substrate"}, {"color": "#99FF99", "id": "Fusarinine-C ornithinesterase inhibitor", "label": "Fusarinine-C ornithinesterase inhibitor", "shape": "dot", "title": "Target: Fusarinine-C ornithinesterase inhibitor"}, {"color": "#FF9999", "id": "Methyl salicylate", "label": "Methyl salicylate", "shape": "dot", "title": "Molecule: Methyl salicylate"}, {"color": "#99FF99", "id": "Antiseborrheic", "label": "Antiseborrheic", "shape": "dot", "title": "Target: Antiseborrheic"}, {"color": "#FF9999", "id": "Ethyl salicylate", "label": "Ethyl salicylate", "shape": "dot", "title": "Molecule: Ethyl salicylate"}, {"color": "#99FF99", "id": "Fibrinolytic", "label": "Fibrinolytic", "shape": "dot", "title": "Target: Fibrinolytic"}, {"color": "#99FF99", "id": "Arylsulfate sulfotransferase inhibitor", "label": "Arylsulfate sulfotransferase inhibitor", "shape": "dot", "title": "Target: Arylsulfate sulfotransferase inhibitor"}, {"color": "#FF9999", "id": "Methyl benzoate", "label": "Methyl benzoate", "shape": "dot", "title": "Molecule: Methyl benzoate"}, {"color": "#FF9999", "id": "Tembamide", "label": "Tembamide", "shape": "dot", "title": "Molecule: Tembamide"}, {"color": "#99FF99", "id": "Calcium channel (voltage-sensitive) activator", "label": "Calcium channel (voltage-sensitive) activator", "shape": "dot", "title": "Target: Calcium channel (voltage-sensitive) activator"}, {"color": "#FF9999", "id": "Salicylic acid", "label": "Salicylic acid", "shape": "dot", "title": "Molecule: Salicylic acid"}, {"color": "#99FF99", "id": "Glucan endo-1,6-beta-glucosidase inhibitor", "label": "Glucan endo-1,6-beta-glucosidase inhibitor", "shape": "dot", "title": "Target: Glucan endo-1,6-beta-glucosidase inhibitor"}, {"color": "#FF9999", "id": "3-Fluorophenyl cyclohexanecarboxylate", "label": "3-Fluorophenyl cyclohexanecarboxylate", "shape": "dot", "title": "Molecule: 3-Fluorophenyl cyclohexanecarboxylate"}, {"color": "#99FF99", "id": "Mucomembranous protector", "label": "Mucomembranous protector", "shape": "dot", "title": "Target: Mucomembranous protector"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "molcluster30", "title": "molctodecc", "to": "Deccluster6"}, {"arrows": "to", "from": "Benzaldehyde", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Benzaldehyde", "title": "moleculetotarget", "to": "Aspartate-phenylpyruvate transaminase inhibitor"}, {"arrows": "to", "from": "Benzaldehyde", "title": "moleculetotarget", "to": "Monodehydroascorbate reductase (NADH) inhibitor"}, {"arrows": "to", "from": "Benzaldehyde", "title": "moleculetotarget", "to": "Aldehyde dehydrogenase 1 substrate"}, {"arrows": "to", "from": "Benzaldehyde", "title": "moleculetotarget", "to": "Aryl-alcohol dehydrogenase inhibitor"}, {"arrows": "to", "from": "Benzaldehyde", "title": "moleculetotarget", "to": "Aldehyde oxidase inhibitor"}, {"arrows": "to", "from": "Benzaldehyde", "title": "moleculetotarget", "to": "CDP-glycerol glycerophosphotransferase inhibitor"}, {"arrows": "to", "from": "Benzyl Alcohol", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Benzyl Alcohol", "title": "moleculetotarget", "to": "Alkenylglycerophosphocholine hydrolase inhibitor"}, {"arrows": "to", "from": "Benzyl Alcohol", "title": "moleculetotarget", "to": "Sugar-phosphatase inhibitor"}, {"arrows": "to", "from": "Benzyl Alcohol", "title": "moleculetotarget", "to": "Pullulanase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Alkenylglycerophosphocholine hydrolase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Testosterone 17beta-dehydrogenase (NADP+) inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Sugar-phosphatase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Pullulanase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Glutamyl endopeptidase II inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Prolyl aminopeptidase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Dehydro-L-gulonate decarboxylase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Phosphatidylcholine-retinol O-acyltransferase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Ribulose-phosphate 3-epimerase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Bisphosphoglycerate phosphatase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Glutathione thiolesterase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Arginine 2-monooxygenase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "UDP-N-acetylglucosamine 4-epimerase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "2-Hydroxymuconate-semialdehyde hydrolase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Arylacetonitrilase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "5-O-(4-coumaroyl)-D-quinate 3\u0027-monooxygenase inhibitor"}, {"arrows": "to", "from": "Benzoic acid", "title": "moleculetotarget", "to": "Chenodeoxycholoyltaurine hydrolase inhibitor"}, {"arrows": "to", "from": "Anthraquinone", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Anthraquinone", "title": "moleculetotarget", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Anthraquinone", "title": "moleculetotarget", "to": "3-Hydroxybenzoate 6-monooxygenase inhibitor"}, {"arrows": "to", "from": "Anthraquinone", "title": "moleculetotarget", "to": "CYP2C12 substrate"}, {"arrows": "to", "from": "Anthraquinone", "title": "moleculetotarget", "to": "Alkane 1-monooxygenase inhibitor"}, {"arrows": "to", "from": "Lapachol", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Lapachol", "title": "moleculetotarget", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Lapachol", "title": "moleculetotarget", "to": "Vitamin-K-epoxide reductase (warfarin-insensitive) inhibitor"}, {"arrows": "to", "from": "Lapachol", "title": "moleculetotarget", "to": "Cardiovascular analeptic"}, {"arrows": "to", "from": "Cinnamyl alcohol", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Cinnamyl alcohol", "title": "moleculetotarget", "to": "Phosphatidylcholine-retinol O-acyltransferase inhibitor"}, {"arrows": "to", "from": "Cinnamyl alcohol", "title": "moleculetotarget", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Cinnamyl alcohol", "title": "moleculetotarget", "to": "Feruloyl esterase inhibitor"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "moleculetotarget", "to": "Testosterone 17beta-dehydrogenase (NADP+) inhibitor"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "moleculetotarget", "to": "Dehydro-L-gulonate decarboxylase inhibitor"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "moleculetotarget", "to": "Glutathione thiolesterase inhibitor"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "moleculetotarget", "to": "Arylacetonitrilase inhibitor"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "moleculetotarget", "to": "Alkane 1-monooxygenase inhibitor"}, {"arrows": "to", "from": "3,4-Dihydroxybenzoic acid", "title": "moleculetotarget", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "2-Phenylethanol", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "2-Phenylethanol", "title": "moleculetotarget", "to": "Alkenylglycerophosphocholine hydrolase inhibitor"}, {"arrows": "to", "from": "2-Phenylethanol", "title": "moleculetotarget", "to": "Sugar-phosphatase inhibitor"}, {"arrows": "to", "from": "2-Phenylethanol", "title": "moleculetotarget", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Aloe emodin", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Aloe emodin", "title": "moleculetotarget", "to": "CYP2C12 substrate"}, {"arrows": "to", "from": "Phenylacetaldehyde", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Phenylacetaldehyde", "title": "moleculetotarget", "to": "Aldehyde dehydrogenase 1 substrate"}, {"arrows": "to", "from": "Phenylacetaldehyde", "title": "moleculetotarget", "to": "Feruloyl esterase inhibitor"}, {"arrows": "to", "from": "Phenylacetaldehyde", "title": "moleculetotarget", "to": "CYP2J substrate"}, {"arrows": "to", "from": "Phthalic acid", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Phthalic acid", "title": "moleculetotarget", "to": "Testosterone 17beta-dehydrogenase (NADP+) inhibitor"}, {"arrows": "to", "from": "Phthalic acid", "title": "moleculetotarget", "to": "Sugar-phosphatase inhibitor"}, {"arrows": "to", "from": "Phthalic acid", "title": "moleculetotarget", "to": "Glutamyl endopeptidase II inhibitor"}, {"arrows": "to", "from": "Phthalic acid", "title": "moleculetotarget", "to": "Prolyl aminopeptidase inhibitor"}, {"arrows": "to", "from": "Saccharin", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Saccharin", "title": "moleculetotarget", "to": "Cl--transporting ATPase inhibitor"}, {"arrows": "to", "from": "Saccharin", "title": "moleculetotarget", "to": "Creatininase inhibitor"}, {"arrows": "to", "from": "Phenethylamine", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "Phenethylamine", "title": "moleculetotarget", "to": "5 Hydroxytryptamine release stimulant"}, {"arrows": "to", "from": "Phenethylamine", "title": "moleculetotarget", "to": "Phobic disorders treatment"}, {"arrows": "to", "from": "2\u0027-Methylacetophenone", "title": "BELONGS_TO", "to": "molcluster30"}, {"arrows": "to", "from": "2\u0027-Methylacetophenone", "title": "moleculetotarget", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "molcluster46", "title": "molctodecc", "to": "Deccluster6"}, {"arrows": "to", "from": "Methyl 1-methoxy-1H-indole-3-carboxylate", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Methyl 1-methoxy-1H-indole-3-carboxylate", "title": "moleculetotarget", "to": "Histone deacetylase 3 inhibitor"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "moleculetotarget", "to": "Prolyl aminopeptidase inhibitor"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "moleculetotarget", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "moleculetotarget", "to": "Phobic disorders treatment"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "moleculetotarget", "to": "CYP2H substrate"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "moleculetotarget", "to": "Fusarinine-C ornithinesterase inhibitor"}, {"arrows": "to", "from": "Methyl salicylate", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Methyl salicylate", "title": "moleculetotarget", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Methyl salicylate", "title": "moleculetotarget", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Methyl salicylate", "title": "moleculetotarget", "to": "Antiseborrheic"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "moleculetotarget", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "moleculetotarget", "to": "Antiseborrheic"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "moleculetotarget", "to": "Fibrinolytic"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "moleculetotarget", "to": "Arylsulfate sulfotransferase inhibitor"}, {"arrows": "to", "from": "Methyl benzoate", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Methyl benzoate", "title": "moleculetotarget", "to": "Prolyl aminopeptidase inhibitor"}, {"arrows": "to", "from": "Methyl benzoate", "title": "moleculetotarget", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Methyl benzoate", "title": "moleculetotarget", "to": "CYP2H substrate"}, {"arrows": "to", "from": "Methyl benzoate", "title": "moleculetotarget", "to": "Fusarinine-C ornithinesterase inhibitor"}, {"arrows": "to", "from": "Tembamide", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Tembamide", "title": "moleculetotarget", "to": "Cardiovascular analeptic"}, {"arrows": "to", "from": "Tembamide", "title": "moleculetotarget", "to": "Phobic disorders treatment"}, {"arrows": "to", "from": "Tembamide", "title": "moleculetotarget", "to": "Calcium channel (voltage-sensitive) activator"}, {"arrows": "to", "from": "Salicylic acid", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "Salicylic acid", "title": "moleculetotarget", "to": "Dehydro-L-gulonate decarboxylase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "moleculetotarget", "to": "Glutathione thiolesterase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "moleculetotarget", "to": "Arylacetonitrilase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "moleculetotarget", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "moleculetotarget", "to": "Glucan endo-1,6-beta-glucosidase inhibitor"}, {"arrows": "to", "from": "3-Fluorophenyl cyclohexanecarboxylate", "title": "BELONGS_TO", "to": "molcluster46"}, {"arrows": "to", "from": "3-Fluorophenyl cyclohexanecarboxylate", "title": "moleculetotarget", "to": "Mucomembranous protector"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

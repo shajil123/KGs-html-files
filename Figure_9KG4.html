@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#FF9999", "id": "Genistein", "label": "Genistein", "shape": "dot", "title": "Molecule: Genistein"}, {"color": "#99FF99", "id": "HIF1A expression inhibitor", "label": "HIF1A expression inhibitor", "shape": "dot", "title": "Target: HIF1A expression inhibitor"}, {"color": "#9999FF", "id": "Asthma", "label": "Asthma", "shape": "dot", "title": "Disease: Asthma"}, {"color": "#FF9999", "id": "2\u0027-Hydroxygenistein", "label": "2\u0027-Hydroxygenistein", "shape": "dot", "title": "Molecule: 2\u0027-Hydroxygenistein"}, {"color": "#FF9999", "id": "Kaempferol", "label": "Kaempferol", "shape": "dot", "title": "Molecule: Kaempferol"}, {"color": "#FF9999", "id": "Quercetagetin", "label": "Quercetagetin", "shape": "dot", "title": "Molecule: Quercetagetin"}, {"color": "#FF9999", "id": "Quercetin", "label": "Quercetin", "shape": "dot", "title": "Molecule: Quercetin"}, {"color": "#9999FF", "id": "Antineoplastic agents", "label": "Antineoplastic agents", "shape": "dot", "title": "Disease: Antineoplastic agents"}, {"color": "#9999FF", "id": "Inflammation", "label": "Inflammation", "shape": "dot", "title": "Disease: Inflammation"}, {"color": "#99FF99", "id": "Ubiquinol-cytochrome-c reductase inhibitor", "label": "Ubiquinol-cytochrome-c reductase inhibitor", "shape": "dot", "title": "Target: Ubiquinol-cytochrome-c reductase inhibitor"}, {"color": "#9999FF", "id": "Bronchitis", "label": "Bronchitis", "shape": "dot", "title": "Disease: Bronchitis"}, {"color": "#FF9999", "id": "biochanin A", "label": "biochanin A", "shape": "dot", "title": "Molecule: biochanin A"}, {"color": "#99FF99", "id": "Chlordecone reductase inhibitor", "label": "Chlordecone reductase inhibitor", "shape": "dot", "title": "Target: Chlordecone reductase inhibitor"}, {"color": "#9999FF", "id": "Common cold", "label": "Common cold", "shape": "dot", "title": "Disease: Common cold"}, {"color": "#9999FF", "id": "Antioxidants", "label": "Antioxidants", "shape": "dot", "title": "Disease: Antioxidants"}, {"color": "#99FF99", "id": "CYP1A substrate", "label": "CYP1A substrate", "shape": "dot", "title": "Target: CYP1A substrate"}, {"color": "#9999FF", "id": "Cough", "label": "Cough", "shape": "dot", "title": "Disease: Cough"}, {"color": "#9999FF", "id": "Anthelmintic", "label": "Anthelmintic", "shape": "dot", "title": "Disease: Anthelmintic"}, {"color": "#99FF99", "id": "Monophenol monooxygenase inhibitor", "label": "Monophenol monooxygenase inhibitor", "shape": "dot", "title": "Target: Monophenol monooxygenase inhibitor"}, {"color": "#9999FF", "id": "Expectorants", "label": "Expectorants", "shape": "dot", "title": "Disease: Expectorants"}, {"color": "#99FF99", "id": "CYP1B substrate", "label": "CYP1B substrate", "shape": "dot", "title": "Target: CYP1B substrate"}, {"color": "#9999FF", "id": "Pharyngitis", "label": "Pharyngitis", "shape": "dot", "title": "Disease: Pharyngitis"}, {"color": "#99FF99", "id": "CYP2A6 substrate", "label": "CYP2A6 substrate", "shape": "dot", "title": "Target: CYP2A6 substrate"}, {"color": "#9999FF", "id": "Leprosy", "label": "Leprosy", "shape": "dot", "title": "Disease: Leprosy"}, {"color": "#99FF99", "id": "CYP1A2 substrate", "label": "CYP1A2 substrate", "shape": "dot", "title": "Target: CYP1A2 substrate"}, {"color": "#9999FF", "id": "Malaria", "label": "Malaria", "shape": "dot", "title": "Disease: Malaria"}, {"color": "#99FF99", "id": "Membrane integrity agonist", "label": "Membrane integrity agonist", "shape": "dot", "title": "Target: Membrane integrity agonist"}, {"color": "#9999FF", "id": "Tuberculosis", "label": "Tuberculosis", "shape": "dot", "title": "Disease: Tuberculosis"}, {"color": "#FF9999", "id": "6-Glucosyl-luteolin", "label": "6-Glucosyl-luteolin", "shape": "dot", "title": "Molecule: 6-Glucosyl-luteolin"}, {"color": "#9999FF", "id": "Helminthiasis", "label": "Helminthiasis", "shape": "dot", "title": "Disease: Helminthiasis"}, {"color": "#9999FF", "id": "Labour pain", "label": "Labour pain", "shape": "dot", "title": "Disease: Labour pain"}, {"color": "#99FF99", "id": "Aldehyde oxidase inhibitor", "label": "Aldehyde oxidase inhibitor", "shape": "dot", "title": "Target: Aldehyde oxidase inhibitor"}, {"color": "#9999FF", "id": "Antibacterial agents", "label": "Antibacterial agents", "shape": "dot", "title": "Disease: Antibacterial agents"}, {"color": "#FF9999", "id": "Prunetin", "label": "Prunetin", "shape": "dot", "title": "Molecule: Prunetin"}, {"color": "#9999FF", "id": "Galactogogues", "label": "Galactogogues", "shape": "dot", "title": "Disease: Galactogogues"}, {"color": "#99FF99", "id": "Histidine kinase inhibitor", "label": "Histidine kinase inhibitor", "shape": "dot", "title": "Target: Histidine kinase inhibitor"}, {"color": "#9999FF", "id": "Antifungal agents", "label": "Antifungal agents", "shape": "dot", "title": "Disease: Antifungal agents"}, {"color": "#9999FF", "id": "Postnatal care", "label": "Postnatal care", "shape": "dot", "title": "Disease: Postnatal care"}, {"color": "#99FF99", "id": "2-Dehydropantoate 2-reductase inhibitor", "label": "2-Dehydropantoate 2-reductase inhibitor", "shape": "dot", "title": "Target: 2-Dehydropantoate 2-reductase inhibitor"}, {"color": "#9999FF", "id": "Endophthalmitis", "label": "Endophthalmitis", "shape": "dot", "title": "Disease: Endophthalmitis"}, {"color": "#99FF99", "id": "Aryl-alcohol dehydrogenase (NADP+) inhibitor", "label": "Aryl-alcohol dehydrogenase (NADP+) inhibitor", "shape": "dot", "title": "Target: Aryl-alcohol dehydrogenase (NADP+) inhibitor"}, {"color": "#9999FF", "id": "Dysuria", "label": "Dysuria", "shape": "dot", "title": "Disease: Dysuria"}, {"color": "#99FF99", "id": "Kinase inhibitor", "label": "Kinase inhibitor", "shape": "dot", "title": "Target: Kinase inhibitor"}, {"color": "#9999FF", "id": "Kidney calculi", "label": "Kidney calculi", "shape": "dot", "title": "Disease: Kidney calculi"}, {"color": "#99FF99", "id": "P-benzoquinone reductase (NADPH) inhibitor", "label": "P-benzoquinone reductase (NADPH) inhibitor", "shape": "dot", "title": "Target: P-benzoquinone reductase (NADPH) inhibitor"}, {"color": "#9999FF", "id": "Urinary bladder calculi", "label": "Urinary bladder calculi", "shape": "dot", "title": "Disease: Urinary bladder calculi"}, {"color": "#99FF99", "id": "Membrane permeability inhibitor", "label": "Membrane permeability inhibitor", "shape": "dot", "title": "Target: Membrane permeability inhibitor"}, {"color": "#9999FF", "id": "Urinary tract infections", "label": "Urinary tract infections", "shape": "dot", "title": "Disease: Urinary tract infections"}, {"color": "#9999FF", "id": "Leucorrhoea", "label": "Leucorrhoea", "shape": "dot", "title": "Disease: Leucorrhoea"}, {"color": "#99FF99", "id": "Peroxidase inhibitor", "label": "Peroxidase inhibitor", "shape": "dot", "title": "Target: Peroxidase inhibitor"}, {"color": "#9999FF", "id": "Urination disorders", "label": "Urination disorders", "shape": "dot", "title": "Disease: Urination disorders"}, {"color": "#99FF99", "id": "Quercetin 2,3-dioxygenase inhibitor", "label": "Quercetin 2,3-dioxygenase inhibitor", "shape": "dot", "title": "Target: Quercetin 2,3-dioxygenase inhibitor"}, {"color": "#9999FF", "id": "Urologic diseases", "label": "Urologic diseases", "shape": "dot", "title": "Disease: Urologic diseases"}, {"color": "#99FF99", "id": "CYP1A1 inhibitor", "label": "CYP1A1 inhibitor", "shape": "dot", "title": "Target: CYP1A1 inhibitor"}, {"color": "#9999FF", "id": "Aphrodisiacs", "label": "Aphrodisiacs", "shape": "dot", "title": "Disease: Aphrodisiacs"}, {"color": "#99FF99", "id": "CYP1B1 inhibitor", "label": "CYP1B1 inhibitor", "shape": "dot", "title": "Target: CYP1B1 inhibitor"}, {"color": "#9999FF", "id": "Gonorrhoea", "label": "Gonorrhoea", "shape": "dot", "title": "Disease: Gonorrhoea"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "HIF1A expression inhibitor"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "Ubiquinol-cytochrome-c reductase inhibitor"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "CYP1A substrate"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "Monophenol monooxygenase inhibitor"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "CYP1B substrate"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "CYP2A6 substrate"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "CYP1A2 substrate"}, {"arrows": "to", "from": "Genistein", "title": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "HIF1A expression inhibitor", "title": "ASSOCIATED_WITH", "to": "Asthma"}, {"arrows": "to", "from": "HIF1A expression inhibitor", "title": "ASSOCIATED_WITH", "to": "Antineoplastic agents"}, {"arrows": "to", "from": "HIF1A expression inhibitor", "title": "ASSOCIATED_WITH", "to": "Inflammation"}, {"arrows": "to", "from": "2\u0027-Hydroxygenistein", "title": "INTERACTS_WITH", "to": "HIF1A expression inhibitor"}, {"arrows": "to", "from": "2\u0027-Hydroxygenistein", "title": "INTERACTS_WITH", "to": "CYP1A substrate"}, {"arrows": "to", "from": "2\u0027-Hydroxygenistein", "title": "INTERACTS_WITH", "to": "Aldehyde oxidase inhibitor"}, {"arrows": "to", "from": "2\u0027-Hydroxygenistein", "title": "INTERACTS_WITH", "to": "Histidine kinase inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "HIF1A expression inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "2-Dehydropantoate 2-reductase inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Aryl-alcohol dehydrogenase (NADP+) inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Kinase inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "P-benzoquinone reductase (NADPH) inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Membrane permeability inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Peroxidase inhibitor"}, {"arrows": "to", "from": "Kaempferol", "title": "INTERACTS_WITH", "to": "Quercetin 2,3-dioxygenase inhibitor"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "HIF1A expression inhibitor"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "2-Dehydropantoate 2-reductase inhibitor"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "Kinase inhibitor"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "Membrane permeability inhibitor"}, {"arrows": "to", "from": "Quercetagetin", "title": "INTERACTS_WITH", "to": "Peroxidase inhibitor"}, {"arrows": "to", "from": "Quercetin", "title": "INTERACTS_WITH", "to": "HIF1A expression inhibitor"}, {"arrows": "to", "from": "Quercetin", "title": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Quercetin", "title": "INTERACTS_WITH", "to": "Peroxidase inhibitor"}, {"arrows": "to", "from": "Ubiquinol-cytochrome-c reductase inhibitor", "title": "ASSOCIATED_WITH", "to": "Bronchitis"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "Ubiquinol-cytochrome-c reductase inhibitor"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "CYP1A substrate"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "Monophenol monooxygenase inhibitor"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "CYP1A2 substrate"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "Aldehyde oxidase inhibitor"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "Histidine kinase inhibitor"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "CYP1A1 inhibitor"}, {"arrows": "to", "from": "biochanin A", "title": "INTERACTS_WITH", "to": "CYP1B1 inhibitor"}, {"arrows": "to", "from": "Chlordecone reductase inhibitor", "title": "ASSOCIATED_WITH", "to": "Common cold"}, {"arrows": "to", "from": "Chlordecone reductase inhibitor", "title": "ASSOCIATED_WITH", "to": "Antioxidants"}, {"arrows": "to", "from": "CYP1A substrate", "title": "ASSOCIATED_WITH", "to": "Cough"}, {"arrows": "to", "from": "CYP1A substrate", "title": "ASSOCIATED_WITH", "to": "Anthelmintic"}, {"arrows": "to", "from": "Monophenol monooxygenase inhibitor", "title": "ASSOCIATED_WITH", "to": "Expectorants"}, {"arrows": "to", "from": "CYP1B substrate", "title": "ASSOCIATED_WITH", "to": "Pharyngitis"}, {"arrows": "to", "from": "CYP2A6 substrate", "title": "ASSOCIATED_WITH", "to": "Leprosy"}, {"arrows": "to", "from": "CYP1A2 substrate", "title": "ASSOCIATED_WITH", "to": "Malaria"}, {"arrows": "to", "from": "Membrane integrity agonist", "title": "ASSOCIATED_WITH", "to": "Tuberculosis"}, {"arrows": "to", "from": "Membrane integrity agonist", "title": "ASSOCIATED_WITH", "to": "Helminthiasis"}, {"arrows": "to", "from": "Membrane integrity agonist", "title": "ASSOCIATED_WITH", "to": "Labour pain"}, {"arrows": "to", "from": "6-Glucosyl-luteolin", "title": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "6-Glucosyl-luteolin", "title": "INTERACTS_WITH", "to": "Membrane permeability inhibitor"}, {"arrows": "to", "from": "Aldehyde oxidase inhibitor", "title": "ASSOCIATED_WITH", "to": "Antibacterial agents"}, {"arrows": "to", "from": "Aldehyde oxidase inhibitor", "title": "ASSOCIATED_WITH", "to": "Galactogogues"}, {"arrows": "to", "from": "Prunetin", "title": "INTERACTS_WITH", "to": "Aldehyde oxidase inhibitor"}, {"arrows": "to", "from": "Prunetin", "title": "INTERACTS_WITH", "to": "Histidine kinase inhibitor"}, {"arrows": "to", "from": "Prunetin", "title": "INTERACTS_WITH", "to": "CYP1A1 inhibitor"}, {"arrows": "to", "from": "Histidine kinase inhibitor", "title": "ASSOCIATED_WITH", "to": "Antifungal agents"}, {"arrows": "to", "from": "Histidine kinase inhibitor", "title": "ASSOCIATED_WITH", "to": "Postnatal care"}, {"arrows": "to", "from": "2-Dehydropantoate 2-reductase inhibitor", "title": "ASSOCIATED_WITH", "to": "Endophthalmitis"}, {"arrows": "to", "from": "Aryl-alcohol dehydrogenase (NADP+) inhibitor", "title": "ASSOCIATED_WITH", "to": "Dysuria"}, {"arrows": "to", "from": "Kinase inhibitor", "title": "ASSOCIATED_WITH", "to": "Kidney calculi"}, {"arrows": "to", "from": "P-benzoquinone reductase (NADPH) inhibitor", "title": "ASSOCIATED_WITH", "to": "Urinary bladder calculi"}, {"arrows": "to", "from": "Membrane permeability inhibitor", "title": "ASSOCIATED_WITH", "to": "Urinary tract infections"}, {"arrows": "to", "from": "Membrane permeability inhibitor", "title": "ASSOCIATED_WITH", "to": "Leucorrhoea"}, {"arrows": "to", "from": "Peroxidase inhibitor", "title": "ASSOCIATED_WITH", "to": "Urination disorders"}, {"arrows": "to", "from": "Quercetin 2,3-dioxygenase inhibitor", "title": "ASSOCIATED_WITH", "to": "Urologic diseases"}, {"arrows": "to", "from": "CYP1A1 inhibitor", "title": "ASSOCIATED_WITH", "to": "Aphrodisiacs"}, {"arrows": "to", "from": "CYP1B1 inhibitor", "title": "ASSOCIATED_WITH", "to": "Gonorrhoea"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

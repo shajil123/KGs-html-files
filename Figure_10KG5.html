@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#FF9999", "id": "Methyl 1-methoxy-1H-indole-3-carboxylate", "label": "Methyl 1-methoxy-1H-indole-3-carboxylate", "shape": "dot", "title": "Molecule: Methyl 1-methoxy-1H-indole-3-carboxylate"}, {"color": "#99FF99", "id": "Histone deacetylase 3 inhibitor", "label": "Histone deacetylase 3 inhibitor", "shape": "dot", "title": "Target: Histone deacetylase 3 inhibitor"}, {"color": "#9999FF", "id": "Abdominal pain", "label": "Abdominal pain", "shape": "dot", "title": "Disease: Abdominal pain"}, {"color": "#FF9999", "id": "Dimethyl terephthalate", "label": "Dimethyl terephthalate", "shape": "dot", "title": "Molecule: Dimethyl terephthalate"}, {"color": "#99FF99", "id": "CYP2H substrate", "label": "CYP2H substrate", "shape": "dot", "title": "Target: CYP2H substrate"}, {"color": "#9999FF", "id": "Anorexia", "label": "Anorexia", "shape": "dot", "title": "Disease: Anorexia"}, {"color": "#9999FF", "id": "Astringents", "label": "Astringents", "shape": "dot", "title": "Disease: Astringents"}, {"color": "#99FF99", "id": "Fusarinine-C ornithinesterase inhibitor", "label": "Fusarinine-C ornithinesterase inhibitor", "shape": "dot", "title": "Target: Fusarinine-C ornithinesterase inhibitor"}, {"color": "#9999FF", "id": "Constipation", "label": "Constipation", "shape": "dot", "title": "Disease: Constipation"}, {"color": "#9999FF", "id": "Demulcents", "label": "Demulcents", "shape": "dot", "title": "Disease: Demulcents"}, {"color": "#99FF99", "id": "Aspulvinone dimethylallyltransferase inhibitor", "label": "Aspulvinone dimethylallyltransferase inhibitor", "shape": "dot", "title": "Target: Aspulvinone dimethylallyltransferase inhibitor"}, {"color": "#9999FF", "id": "Diarrhoea", "label": "Diarrhoea", "shape": "dot", "title": "Disease: Diarrhoea"}, {"color": "#9999FF", "id": "Stomach diseases", "label": "Stomach diseases", "shape": "dot", "title": "Disease: Stomach diseases"}, {"color": "#9999FF", "id": "Vomiting", "label": "Vomiting", "shape": "dot", "title": "Disease: Vomiting"}, {"color": "#9999FF", "id": "Cooling effect on the body", "label": "Cooling effect on the body", "shape": "dot", "title": "Disease: Cooling effect on the body"}, {"color": "#99FF99", "id": "Prolyl aminopeptidase inhibitor", "label": "Prolyl aminopeptidase inhibitor", "shape": "dot", "title": "Target: Prolyl aminopeptidase inhibitor"}, {"color": "#9999FF", "id": "Dyspepsia", "label": "Dyspepsia", "shape": "dot", "title": "Disease: Dyspepsia"}, {"color": "#9999FF", "id": "Digestive system diseases", "label": "Digestive system diseases", "shape": "dot", "title": "Disease: Digestive system diseases"}, {"color": "#99FF99", "id": "Phobic disorders treatment", "label": "Phobic disorders treatment", "shape": "dot", "title": "Target: Phobic disorders treatment"}, {"color": "#9999FF", "id": "Flatulence", "label": "Flatulence", "shape": "dot", "title": "Disease: Flatulence"}, {"color": "#9999FF", "id": "Haemorrhoids", "label": "Haemorrhoids", "shape": "dot", "title": "Disease: Haemorrhoids"}, {"color": "#FF9999", "id": "Methyl salicylate", "label": "Methyl salicylate", "shape": "dot", "title": "Molecule: Methyl salicylate"}, {"color": "#99FF99", "id": "Membrane integrity agonist", "label": "Membrane integrity agonist", "shape": "dot", "title": "Target: Membrane integrity agonist"}, {"color": "#9999FF", "id": "Colic", "label": "Colic", "shape": "dot", "title": "Disease: Colic"}, {"color": "#99FF99", "id": "Antiseborrheic", "label": "Antiseborrheic", "shape": "dot", "title": "Target: Antiseborrheic"}, {"color": "#9999FF", "id": "Dysentery", "label": "Dysentery", "shape": "dot", "title": "Disease: Dysentery"}, {"color": "#9999FF", "id": "Ulcers", "label": "Ulcers", "shape": "dot", "title": "Disease: Ulcers"}, {"color": "#FF9999", "id": "Ethyl salicylate", "label": "Ethyl salicylate", "shape": "dot", "title": "Molecule: Ethyl salicylate"}, {"color": "#99FF99", "id": "Fibrinolytic", "label": "Fibrinolytic", "shape": "dot", "title": "Target: Fibrinolytic"}, {"color": "#9999FF", "id": "Laxatives", "label": "Laxatives", "shape": "dot", "title": "Disease: Laxatives"}, {"color": "#99FF99", "id": "Arylsulfate sulfotransferase inhibitor", "label": "Arylsulfate sulfotransferase inhibitor", "shape": "dot", "title": "Target: Arylsulfate sulfotransferase inhibitor"}, {"color": "#9999FF", "id": "Appetite stimulants", "label": "Appetite stimulants", "shape": "dot", "title": "Disease: Appetite stimulants"}, {"color": "#FF9999", "id": "Methyl benzoate", "label": "Methyl benzoate", "shape": "dot", "title": "Molecule: Methyl benzoate"}, {"color": "#FF9999", "id": "Tembamide", "label": "Tembamide", "shape": "dot", "title": "Molecule: Tembamide"}, {"color": "#99FF99", "id": "Cardiovascular analeptic", "label": "Cardiovascular analeptic", "shape": "dot", "title": "Target: Cardiovascular analeptic"}, {"color": "#9999FF", "id": "Gastrointestinal diseases", "label": "Gastrointestinal diseases", "shape": "dot", "title": "Disease: Gastrointestinal diseases"}, {"color": "#99FF99", "id": "Calcium channel (voltage-sensitive) activator", "label": "Calcium channel (voltage-sensitive) activator", "shape": "dot", "title": "Target: Calcium channel (voltage-sensitive) activator"}, {"color": "#9999FF", "id": "Asthma", "label": "Asthma", "shape": "dot", "title": "Disease: Asthma"}, {"color": "#FF9999", "id": "Salicylic acid", "label": "Salicylic acid", "shape": "dot", "title": "Molecule: Salicylic acid"}, {"color": "#99FF99", "id": "Dehydro-L-gulonate decarboxylase inhibitor", "label": "Dehydro-L-gulonate decarboxylase inhibitor", "shape": "dot", "title": "Target: Dehydro-L-gulonate decarboxylase inhibitor"}, {"color": "#9999FF", "id": "Bronchitis", "label": "Bronchitis", "shape": "dot", "title": "Disease: Bronchitis"}, {"color": "#99FF99", "id": "Glutathione thiolesterase inhibitor", "label": "Glutathione thiolesterase inhibitor", "shape": "dot", "title": "Target: Glutathione thiolesterase inhibitor"}, {"color": "#9999FF", "id": "Common cold", "label": "Common cold", "shape": "dot", "title": "Disease: Common cold"}, {"color": "#99FF99", "id": "Glucan endo-1,6-beta-glucosidase inhibitor", "label": "Glucan endo-1,6-beta-glucosidase inhibitor", "shape": "dot", "title": "Target: Glucan endo-1,6-beta-glucosidase inhibitor"}, {"color": "#9999FF", "id": "Cough", "label": "Cough", "shape": "dot", "title": "Disease: Cough"}, {"color": "#99FF99", "id": "Chlordecone reductase inhibitor", "label": "Chlordecone reductase inhibitor", "shape": "dot", "title": "Target: Chlordecone reductase inhibitor"}, {"color": "#9999FF", "id": "Expectorants", "label": "Expectorants", "shape": "dot", "title": "Disease: Expectorants"}, {"color": "#99FF99", "id": "Arylacetonitrilase inhibitor", "label": "Arylacetonitrilase inhibitor", "shape": "dot", "title": "Target: Arylacetonitrilase inhibitor"}, {"color": "#9999FF", "id": "Pharyngitis", "label": "Pharyngitis", "shape": "dot", "title": "Disease: Pharyngitis"}, {"color": "#FF9999", "id": "3-Fluorophenyl cyclohexanecarboxylate", "label": "3-Fluorophenyl cyclohexanecarboxylate", "shape": "dot", "title": "Molecule: 3-Fluorophenyl cyclohexanecarboxylate"}, {"color": "#99FF99", "id": "Mucomembranous protector", "label": "Mucomembranous protector", "shape": "dot", "title": "Target: Mucomembranous protector"}, {"color": "#9999FF", "id": "Leprosy", "label": "Leprosy", "shape": "dot", "title": "Disease: Leprosy"}, {"color": "#9999FF", "id": "Malaria", "label": "Malaria", "shape": "dot", "title": "Disease: Malaria"}, {"color": "#9999FF", "id": "Tuberculosis", "label": "Tuberculosis", "shape": "dot", "title": "Disease: Tuberculosis"}, {"color": "#9999FF", "id": "Antibacterial agents", "label": "Antibacterial agents", "shape": "dot", "title": "Disease: Antibacterial agents"}, {"color": "#9999FF", "id": "Antifungal agents", "label": "Antifungal agents", "shape": "dot", "title": "Disease: Antifungal agents"}, {"color": "#9999FF", "id": "Antineoplastic agents", "label": "Antineoplastic agents", "shape": "dot", "title": "Disease: Antineoplastic agents"}, {"color": "#9999FF", "id": "Anthelmintic", "label": "Anthelmintic", "shape": "dot", "title": "Disease: Anthelmintic"}, {"color": "#9999FF", "id": "Antioxidants", "label": "Antioxidants", "shape": "dot", "title": "Disease: Antioxidants"}, {"color": "#9999FF", "id": "Helminthiasis", "label": "Helminthiasis", "shape": "dot", "title": "Disease: Helminthiasis"}, {"color": "#9999FF", "id": "Inflammation", "label": "Inflammation", "shape": "dot", "title": "Disease: Inflammation"}, {"color": "#9999FF", "id": "Endophthalmitis", "label": "Endophthalmitis", "shape": "dot", "title": "Disease: Endophthalmitis"}, {"color": "#9999FF", "id": "Brain diseases", "label": "Brain diseases", "shape": "dot", "title": "Disease: Brain diseases"}, {"color": "#9999FF", "id": "Headache", "label": "Headache", "shape": "dot", "title": "Disease: Headache"}, {"color": "#9999FF", "id": "Nervous system diseases", "label": "Nervous system diseases", "shape": "dot", "title": "Disease: Nervous system diseases"}, {"color": "#9999FF", "id": "Paralysis", "label": "Paralysis", "shape": "dot", "title": "Disease: Paralysis"}, {"color": "#9999FF", "id": "Analgesics", "label": "Analgesics", "shape": "dot", "title": "Disease: Analgesics"}, {"color": "#9999FF", "id": "Anticonvulsants", "label": "Anticonvulsants", "shape": "dot", "title": "Disease: Anticonvulsants"}, {"color": "#9999FF", "id": "Antipyretics", "label": "Antipyretics", "shape": "dot", "title": "Disease: Antipyretics"}, {"color": "#9999FF", "id": "Pain", "label": "Pain", "shape": "dot", "title": "Disease: Pain"}, {"color": "#9999FF", "id": "Rheumatoid arthritis", "label": "Rheumatoid arthritis", "shape": "dot", "title": "Disease: Rheumatoid arthritis"}, {"color": "#9999FF", "id": "Sprains and strains", "label": "Sprains and strains", "shape": "dot", "title": "Disease: Sprains and strains"}, {"color": "#9999FF", "id": "Antirheumatic agents", "label": "Antirheumatic agents", "shape": "dot", "title": "Disease: Antirheumatic agents"}, {"color": "#9999FF", "id": "Aphrodisiacs", "label": "Aphrodisiacs", "shape": "dot", "title": "Disease: Aphrodisiacs"}, {"color": "#9999FF", "id": "Furunculosis", "label": "Furunculosis", "shape": "dot", "title": "Disease: Furunculosis"}, {"color": "#9999FF", "id": "Hair loss", "label": "Hair loss", "shape": "dot", "title": "Disease: Hair loss"}, {"color": "#9999FF", "id": "Skin diseases", "label": "Skin diseases", "shape": "dot", "title": "Disease: Skin diseases"}, {"color": "#9999FF", "id": "Snake bites", "label": "Snake bites", "shape": "dot", "title": "Disease: Snake bites"}, {"color": "#9999FF", "id": "Scorpion stings", "label": "Scorpion stings", "shape": "dot", "title": "Disease: Scorpion stings"}, {"color": "#9999FF", "id": "Wounds and injuries", "label": "Wounds and injuries", "shape": "dot", "title": "Disease: Wounds and injuries"}, {"color": "#9999FF", "id": "Wound healing", "label": "Wound healing", "shape": "dot", "title": "Disease: Wound healing"}, {"color": "#9999FF", "id": "Emollients", "label": "Emollients", "shape": "dot", "title": "Disease: Emollients"}, {"color": "#9999FF", "id": "Jaundice", "label": "Jaundice", "shape": "dot", "title": "Disease: Jaundice"}, {"color": "#9999FF", "id": "Liver diseases", "label": "Liver diseases", "shape": "dot", "title": "Disease: Liver diseases"}, {"color": "#9999FF", "id": "Metabolism (Metabolic disorders)", "label": "Metabolism (Metabolic disorders)", "shape": "dot", "title": "Disease: Metabolism (Metabolic disorders)"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Methyl 1-methoxy-1H-indole-3-carboxylate", "title": "INTERACTS_WITH", "to": "Histone deacetylase 3 inhibitor"}, {"arrows": "to", "from": "Histone deacetylase 3 inhibitor", "title": "ASSOCIATED_WITH", "to": "Abdominal pain"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "INTERACTS_WITH", "to": "CYP2H substrate"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "INTERACTS_WITH", "to": "Fusarinine-C ornithinesterase inhibitor"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "INTERACTS_WITH", "to": "Prolyl aminopeptidase inhibitor"}, {"arrows": "to", "from": "Dimethyl terephthalate", "title": "INTERACTS_WITH", "to": "Phobic disorders treatment"}, {"arrows": "to", "from": "CYP2H substrate", "title": "ASSOCIATED_WITH", "to": "Anorexia"}, {"arrows": "to", "from": "CYP2H substrate", "title": "ASSOCIATED_WITH", "to": "Astringents"}, {"arrows": "to", "from": "Fusarinine-C ornithinesterase inhibitor", "title": "ASSOCIATED_WITH", "to": "Constipation"}, {"arrows": "to", "from": "Fusarinine-C ornithinesterase inhibitor", "title": "ASSOCIATED_WITH", "to": "Demulcents"}, {"arrows": "to", "from": "Aspulvinone dimethylallyltransferase inhibitor", "title": "ASSOCIATED_WITH", "to": "Diarrhoea"}, {"arrows": "to", "from": "Aspulvinone dimethylallyltransferase inhibitor", "title": "ASSOCIATED_WITH", "to": "Stomach diseases"}, {"arrows": "to", "from": "Aspulvinone dimethylallyltransferase inhibitor", "title": "ASSOCIATED_WITH", "to": "Vomiting"}, {"arrows": "to", "from": "Aspulvinone dimethylallyltransferase inhibitor", "title": "ASSOCIATED_WITH", "to": "Cooling effect on the body"}, {"arrows": "to", "from": "Prolyl aminopeptidase inhibitor", "title": "ASSOCIATED_WITH", "to": "Dyspepsia"}, {"arrows": "to", "from": "Prolyl aminopeptidase inhibitor", "title": "ASSOCIATED_WITH", "to": "Digestive system diseases"}, {"arrows": "to", "from": "Phobic disorders treatment", "title": "ASSOCIATED_WITH", "to": "Flatulence"}, {"arrows": "to", "from": "Phobic disorders treatment", "title": "ASSOCIATED_WITH", "to": "Haemorrhoids"}, {"arrows": "to", "from": "Methyl salicylate", "title": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Methyl salicylate", "title": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"arrows": "to", "from": "Methyl salicylate", "title": "INTERACTS_WITH", "to": "Antiseborrheic"}, {"arrows": "to", "from": "Membrane integrity agonist", "title": "ASSOCIATED_WITH", "to": "Colic"}, {"arrows": "to", "from": "Antiseborrheic", "title": "ASSOCIATED_WITH", "to": "Dysentery"}, {"arrows": "to", "from": "Antiseborrheic", "title": "ASSOCIATED_WITH", "to": "Ulcers"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "INTERACTS_WITH", "to": "Antiseborrheic"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "INTERACTS_WITH", "to": "Fibrinolytic"}, {"arrows": "to", "from": "Ethyl salicylate", "title": "INTERACTS_WITH", "to": "Arylsulfate sulfotransferase inhibitor"}, {"arrows": "to", "from": "Fibrinolytic", "title": "ASSOCIATED_WITH", "to": "Laxatives"}, {"arrows": "to", "from": "Arylsulfate sulfotransferase inhibitor", "title": "ASSOCIATED_WITH", "to": "Appetite stimulants"}, {"arrows": "to", "from": "Methyl benzoate", "title": "INTERACTS_WITH", "to": "CYP2H substrate"}, {"arrows": "to", "from": "Methyl benzoate", "title": "INTERACTS_WITH", "to": "Fusarinine-C ornithinesterase inhibitor"}, {"arrows": "to", "from": "Methyl benzoate", "title": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"arrows": "to", "from": "Methyl benzoate", "title": "INTERACTS_WITH", "to": "Prolyl aminopeptidase inhibitor"}, {"arrows": "to", "from": "Tembamide", "title": "INTERACTS_WITH", "to": "Phobic disorders treatment"}, {"arrows": "to", "from": "Tembamide", "title": "INTERACTS_WITH", "to": "Cardiovascular analeptic"}, {"arrows": "to", "from": "Tembamide", "title": "INTERACTS_WITH", "to": "Calcium channel (voltage-sensitive) activator"}, {"arrows": "to", "from": "Cardiovascular analeptic", "title": "ASSOCIATED_WITH", "to": "Gastrointestinal diseases"}, {"arrows": "to", "from": "Calcium channel (voltage-sensitive) activator", "title": "ASSOCIATED_WITH", "to": "Asthma"}, {"arrows": "to", "from": "Salicylic acid", "title": "INTERACTS_WITH", "to": "Dehydro-L-gulonate decarboxylase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "INTERACTS_WITH", "to": "Glutathione thiolesterase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "INTERACTS_WITH", "to": "Glucan endo-1,6-beta-glucosidase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"arrows": "to", "from": "Salicylic acid", "title": "INTERACTS_WITH", "to": "Arylacetonitrilase inhibitor"}, {"arrows": "to", "from": "Dehydro-L-gulonate decarboxylase inhibitor", "title": "ASSOCIATED_WITH", "to": "Bronchitis"}, {"arrows": "to", "from": "Glutathione thiolesterase inhibitor", "title": "ASSOCIATED_WITH", "to": "Common cold"}, {"arrows": "to", "from": "Glucan endo-1,6-beta-glucosidase inhibitor", "title": "ASSOCIATED_WITH", "to": "Cough"}, {"arrows": "to", "from": "Chlordecone reductase inhibitor", "title": "ASSOCIATED_WITH", "to": "Expectorants"}, {"arrows": "to", "from": "Arylacetonitrilase inhibitor", "title": "ASSOCIATED_WITH", "to": "Pharyngitis"}, {"arrows": "to", "from": "3-Fluorophenyl cyclohexanecarboxylate", "title": "INTERACTS_WITH", "to": "Mucomembranous protector"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Leprosy"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Malaria"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Tuberculosis"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Antibacterial agents"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Antifungal agents"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Antineoplastic agents"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Anthelmintic"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Antioxidants"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Helminthiasis"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Inflammation"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Endophthalmitis"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Brain diseases"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Headache"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Nervous system diseases"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Paralysis"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Analgesics"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Anticonvulsants"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Antipyretics"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Pain"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Rheumatoid arthritis"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Sprains and strains"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Antirheumatic agents"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Aphrodisiacs"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Furunculosis"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Hair loss"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Skin diseases"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Snake bites"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Scorpion stings"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Wounds and injuries"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Wound healing"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Emollients"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Jaundice"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Liver diseases"}, {"arrows": "to", "from": "Mucomembranous protector", "title": "ASSOCIATED_WITH", "to": "Metabolism (Metabolic disorders)"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #fff;
+                 border: 1px solid black;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "lightblue", "font": {"color": "black"}, "id": "Aegelinol", "label": "Aegelinol", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "CYP2C12 substrate", "label": "CYP2C12 substrate", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Abdominal pain", "label": "Abdominal pain", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Marmin", "label": "Marmin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Umbelliferone", "label": "Umbelliferone", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Coumarin", "label": "Coumarin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Auraptene", "label": "Auraptene", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Scopoletin", "label": "Scopoletin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Psoralen", "label": "Psoralen", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Scoparone", "label": "Scoparone", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Esculetin", "label": "Esculetin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Marmesin", "label": "Marmesin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Ellagic acid", "label": "Ellagic acid", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "Spasmolytic, urinary", "label": "Spasmolytic, urinary", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Anorexia", "label": "Anorexia", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Constipation", "label": "Constipation", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "Lipid metabolism regulator", "label": "Lipid metabolism regulator", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Diarrhoea", "label": "Diarrhoea", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "Lipid peroxidase inhibitor", "label": "Lipid peroxidase inhibitor", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Dyspepsia", "label": "Dyspepsia", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Flatulence", "label": "Flatulence", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "CYP2A11 substrate", "label": "CYP2A11 substrate", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Stomach diseases", "label": "Stomach diseases", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "Chlordecone reductase inhibitor", "label": "Chlordecone reductase inhibitor", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Colic", "label": "Colic", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "Membrane integrity agonist", "label": "Membrane integrity agonist", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Dysentery", "label": "Dysentery", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Esculin", "label": "Esculin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Scopolin", "label": "Scopolin", "shape": "dot"}, {"color": "lightblue", "font": {"color": "black"}, "id": "Skimmin", "label": "Skimmin", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "Aspulvinone dimethylallyltransferase inhibitor", "label": "Aspulvinone dimethylallyltransferase inhibitor", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Vomiting", "label": "Vomiting", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "4-Nitrophenol 2-monooxygenase inhibitor", "label": "4-Nitrophenol 2-monooxygenase inhibitor", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Ulcers", "label": "Ulcers", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "CYP2B5 substrate", "label": "CYP2B5 substrate", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Laxatives", "label": "Laxatives", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "CYP2A4 substrate", "label": "CYP2A4 substrate", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Appetite stimulants", "label": "Appetite stimulants", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Astringents", "label": "Astringents", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Cooling effect on the body", "label": "Cooling effect on the body", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Demulcents", "label": "Demulcents", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Digestive system diseases", "label": "Digestive system diseases", "shape": "dot"}, {"color": "lightgreen", "font": {"color": "black"}, "id": "CYP2F1 substrate", "label": "CYP2F1 substrate", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Gastrointestinal diseases", "label": "Gastrointestinal diseases", "shape": "dot"}, {"color": "lightcoral", "font": {"color": "black"}, "id": "Haemorrhoids", "label": "Haemorrhoids", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "Aegelinol", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Aegelinol", "label": "INTERACTS_WITH", "to": "Spasmolytic, urinary"}, {"from": "CYP2C12 substrate", "label": "ASSOCIATED_WITH", "to": "Abdominal pain"}, {"from": "CYP2C12 substrate", "label": "ASSOCIATED_WITH", "to": "Constipation"}, {"from": "CYP2C12 substrate", "label": "ASSOCIATED_WITH", "to": "Flatulence"}, {"from": "CYP2C12 substrate", "label": "ASSOCIATED_WITH", "to": "Astringents"}, {"from": "Marmin", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Marmin", "label": "INTERACTS_WITH", "to": "Lipid metabolism regulator"}, {"from": "Marmin", "label": "INTERACTS_WITH", "to": "Lipid peroxidase inhibitor"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "CYP2A11 substrate"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "4-Nitrophenol 2-monooxygenase inhibitor"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "CYP2B5 substrate"}, {"from": "Umbelliferone", "label": "INTERACTS_WITH", "to": "CYP2A4 substrate"}, {"from": "Coumarin", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Coumarin", "label": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"from": "Coumarin", "label": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"from": "Coumarin", "label": "INTERACTS_WITH", "to": "CYP2B5 substrate"}, {"from": "Coumarin", "label": "INTERACTS_WITH", "to": "CYP2A4 substrate"}, {"from": "Coumarin", "label": "INTERACTS_WITH", "to": "CYP2F1 substrate"}, {"from": "Auraptene", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Auraptene", "label": "INTERACTS_WITH", "to": "Lipid metabolism regulator"}, {"from": "Scopoletin", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Scopoletin", "label": "INTERACTS_WITH", "to": "CYP2A11 substrate"}, {"from": "Scopoletin", "label": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"from": "Scopoletin", "label": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"from": "Scopoletin", "label": "INTERACTS_WITH", "to": "4-Nitrophenol 2-monooxygenase inhibitor"}, {"from": "Psoralen", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Psoralen", "label": "INTERACTS_WITH", "to": "CYP2A11 substrate"}, {"from": "Psoralen", "label": "INTERACTS_WITH", "to": "CYP2F1 substrate"}, {"from": "Scoparone", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Scoparone", "label": "INTERACTS_WITH", "to": "CYP2A11 substrate"}, {"from": "Scoparone", "label": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"from": "Scoparone", "label": "INTERACTS_WITH", "to": "4-Nitrophenol 2-monooxygenase inhibitor"}, {"from": "Scoparone", "label": "INTERACTS_WITH", "to": "CYP2B5 substrate"}, {"from": "Esculetin", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Esculetin", "label": "INTERACTS_WITH", "to": "CYP2A11 substrate"}, {"from": "Esculetin", "label": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"from": "Esculetin", "label": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"from": "Esculetin", "label": "INTERACTS_WITH", "to": "4-Nitrophenol 2-monooxygenase inhibitor"}, {"from": "Marmesin", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Marmesin", "label": "INTERACTS_WITH", "to": "CYP2A11 substrate"}, {"from": "Ellagic acid", "label": "INTERACTS_WITH", "to": "CYP2C12 substrate"}, {"from": "Ellagic acid", "label": "INTERACTS_WITH", "to": "Chlordecone reductase inhibitor"}, {"from": "Ellagic acid", "label": "INTERACTS_WITH", "to": "Aspulvinone dimethylallyltransferase inhibitor"}, {"from": "Spasmolytic, urinary", "label": "ASSOCIATED_WITH", "to": "Anorexia"}, {"from": "Lipid metabolism regulator", "label": "ASSOCIATED_WITH", "to": "Diarrhoea"}, {"from": "Lipid peroxidase inhibitor", "label": "ASSOCIATED_WITH", "to": "Dyspepsia"}, {"from": "CYP2A11 substrate", "label": "ASSOCIATED_WITH", "to": "Stomach diseases"}, {"from": "Chlordecone reductase inhibitor", "label": "ASSOCIATED_WITH", "to": "Colic"}, {"from": "Membrane integrity agonist", "label": "ASSOCIATED_WITH", "to": "Dysentery"}, {"from": "Membrane integrity agonist", "label": "ASSOCIATED_WITH", "to": "Haemorrhoids"}, {"from": "Esculin", "label": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"from": "Scopolin", "label": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"from": "Skimmin", "label": "INTERACTS_WITH", "to": "Membrane integrity agonist"}, {"from": "Aspulvinone dimethylallyltransferase inhibitor", "label": "ASSOCIATED_WITH", "to": "Vomiting"}, {"from": "Aspulvinone dimethylallyltransferase inhibitor", "label": "ASSOCIATED_WITH", "to": "Digestive system diseases"}, {"from": "4-Nitrophenol 2-monooxygenase inhibitor", "label": "ASSOCIATED_WITH", "to": "Ulcers"}, {"from": "CYP2B5 substrate", "label": "ASSOCIATED_WITH", "to": "Laxatives"}, {"from": "CYP2B5 substrate", "label": "ASSOCIATED_WITH", "to": "Cooling effect on the body"}, {"from": "CYP2A4 substrate", "label": "ASSOCIATED_WITH", "to": "Appetite stimulants"}, {"from": "CYP2A4 substrate", "label": "ASSOCIATED_WITH", "to": "Demulcents"}, {"from": "CYP2F1 substrate", "label": "ASSOCIATED_WITH", "to": "Gastrointestinal diseases"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
